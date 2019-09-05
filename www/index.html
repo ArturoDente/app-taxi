@@ -21,216 +21,236 @@
 -->
 <html>
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
-    <!-- Good default declaration:
-    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-        * Enable inline JS: add 'unsafe-inline' to default-src
-        * Enable eval(): add 'unsafe-eval' to default-src
-    * Create your own at http://cspisawesome.com
-    -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+        <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+        <!-- Good default declaration:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+            * Enable eval(): add 'unsafe-eval' to default-src
+        * Create your own at http://cspisawesome.com
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
 
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.mobile-1.4.5.min.js"></script>
 
-    <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/pasti.min.css" />
-    <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
-    <title>Prenotazione taxi Cei</title>
-    <script>
-        //var baseUrl = 'http://192.168.1.195:8080/prenotazionetaxi/';
-        var baseUrl = 'http://webapps.chiesacattolica.it/prenotazionetaxi/';
-        var usedemail = ((localStorage.getItem('email')) ? localStorage.getItem('email') : '');
-        var usedpassword = ((localStorage.getItem('password')) ? localStorage.getItem('password') : '');
-        var serverUrl = baseUrl + 'Webservice';
-        var loginUrl = serverUrl + '?action=login';
-        var categoryUrl = serverUrl + '?action=categoryData';
-        var categoryData = '';
-        
-        $(document).on('pageinit', function() {
-            checkLogin();
+        <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="css/pasti.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
+        <title>Prenotazione taxi Cei</title>
+        <script>
+            var baseUrl = 'http://192.168.1.195:8080/prenotazionetaxi/';
+            //var baseUrl = 'http://webapps.chiesacattolica.it/prenotazionetaxi/';
+            var usedemail = ((localStorage.getItem('email')) ? localStorage.getItem('email') : '');
+            var usedpassword = ((localStorage.getItem('password')) ? localStorage.getItem('password') : '');
+            var serverUrl = baseUrl + 'Webservice';
+            var loginUrl = serverUrl + '?action=login';
+            var categoryUrl = serverUrl + '?action=categoryData';
+            var categoryData = '';
 
-        });
-        
-        
-        function genericAjax(urlpassed) {
-            $.ajax({
-                url: urlpassed,
-                type: 'get',
-                async: 'true',
-                dataType: 'jsonp',
-                beforeSend: function() {
-                    // This callback function will trigger before data is sent
-                    $.mobile.loading('show', {
-                        theme: "a",
-                        text: "Attendere prego...",
-                        textonly: true,
-                        textVisible: true
-                    }); // This will show ajax spinner
-                },
-                complete: function() {
-                    // This callback function will trigger on data sent/received complete
-                    $.mobile.loading('hide'); // This will hide ajax spinner
-                },
-                success: function(result) {
-                    console.log(result.massage);
-                    if (result.status) {
-                        //categoryData =  result.massage;
-                        //populate();
-                        //$.mobile.changePage("#second");                        
-                    } else {
-                        alert('errore di connessione!');
-                    }
-                },
-                error: function(request, error) {
-                    // This callback function will trigger on unsuccessful action               
-                    //alert('Network error has occurred please try again!');
-                    //console.log('ERRORE '+error.toString());
-                }
+            $(document).on('pageinit', function () {
+                checkLogin();
+
             });
-        }
 
-        
-        
-        function checkLogin() {
-            if (window.localStorage.getItem('email') && window.localStorage.getItem('password')) {
-                //try login
-                var url4login = loginUrl + '&email=' + window.localStorage.getItem('email') + '&password=' + window.localStorage.getItem('password');
-                genericAjax(url4login); //chiama , da server, getLoginResponse, per via del meccanismo jsonp
-            } else {
-                /*prompt*/
-                loginForm();
+
+            function genericAjax(urlpassed) {
+                $.ajax({
+                    url: urlpassed,
+                    type: 'get',
+                    async: 'true',
+                    dataType: 'jsonp',
+                    beforeSend: function () {
+                        // This callback function will trigger before data is sent
+                        $.mobile.loading('show', {
+                            theme: "a",
+                            text: "Attendere prego...",
+                            textonly: true,
+                            textVisible: true
+                        }); // This will show ajax spinner
+                    },
+                    complete: function () {
+                        // This callback function will trigger on data sent/received complete
+                        $.mobile.loading('hide'); // This will hide ajax spinner
+                    },
+                    success: function (result) {
+                        console.log(result.massage);
+                        if (result.status) {
+                            //categoryData =  result.massage;
+                            //populate();
+                            //$.mobile.changePage("#second");                        
+                        } else {
+                            alert('errore di connessione!');
+                        }
+                    },
+                    error: function (request, error) {
+                        // This callback function will trigger on unsuccessful action               
+                        //alert('Network error has occurred please try again!');
+                        //console.log('ERRORE '+error.toString());
+                    }
+                });
             }
-        }
-        
-         /*
-        funzioni richiamate dal server via jsonp
-        */
-        
-        function getLoginResponse(jsonpdata) {
-            if (jsonpdata.successful == '1') {
-                loadCategoryData(); //il server richiamerà poi loadData(, la quale richiama populate())
-                //salvo le credenziali
-                // console.log(usedemail);
-                window.localStorage.setItem('email', usedemail);
-                window.localStorage.setItem('password', usedpassword);
-                return;
-            }
 
-            /*login errato*/
-            alert('Login non riuscito, inserire le credenziali');
-            loginForm();
 
-        }
-        
-        function printForm(jsondata){
-            //console.log(jsondata);
-            $('#form').find('.ui-content').html(jsondata.form);
-            location.href='#form';
-        }
-        
-        
-        
-        
-        
 
-        /*fine area funzioni richiamate dal server via jsonp*/
-
-        function loadCategoryData() {
-            genericAjax(categoryUrl);
-        }
-        
-        
-        function loginForm() {
-            var frm = $('<form></form>');
-            frm.append('<b>Inserire le credenziali</b><br>');
-            frm.append('<input type="text" id="email" placeholder="email">');
-            frm.append('<br><input type="password" id="password" placeholder="password">');
-            frm.append('<br><input type="button" id="btnlogin" value="Login" onclick="submitLogin($(\'#email\').val(),$(\'#password\').val())">');
-            $('#home').find('.ui-content').html(frm);
-        }
-        
-        function loadData(jsonpdata){
-            categoryData = jsonpdata;
-            populate();
-        }
-        
-        
-        function submitLogin(em, pwd) {
-            var url4login = loginUrl + '&email=' + em + '&password=' + pwd;
-            usedemail = em;
-            usedpassword = pwd;
-            genericAjax(url4login); //chiama , da server, getLoginResponse, per via del meccanismo jsonp
-        }
-        
-        function populate(){
-            
-            if (categoryData == '') {
-                alert('Errore di connessione al server');
-                return;
-            }
-            var toaddGG = $('<ul></ul>');
-            var prenotazioni=new Array();
-            try{
-                prenotazioni=categoryData.prenotazioni;
-                for (var t=0;t<prenotazioni.length;t++){
-                    toaddGG.append('<li class="ui-btn">'+prenotazioni[t]+'</li>');
+            function checkLogin() {
+                if (window.localStorage.getItem('email') && window.localStorage.getItem('password')) {
+                    //try login
+                    var url4login = loginUrl + '&email=' + window.localStorage.getItem('email') + '&password=' + window.localStorage.getItem('password');
+                    genericAjax(url4login); //chiama , da server, getLoginResponse, per via del meccanismo jsonp
+                } else {
+                    /*prompt*/
+                    loginForm();
                 }
-            }catch (Excption) {
-                prenotazioni.push("errore nel reperire le corse");
             }
-            $('#home').find('.ui-content').html('<h1>Ultime 10 prenotazioni</h1>' + toaddGG.html());
-        }
-        
 
-        function closeApp() {
-            if (navigator.app) {
-                navigator.app.exitApp();
-            } else if (navigator.device) {
-                navigator.device.exitApp();
-            } else {
-                window.close();
+            /*
+             funzioni richiamate dal server via jsonp
+             */
+
+            function getLoginResponse(jsonpdata) {
+                if (jsonpdata.successful == '1') {
+                    loadCategoryData(); //il server richiamerà poi loadData(, la quale richiama populate())
+                    //salvo le credenziali
+                    // console.log(usedemail);
+                    window.localStorage.setItem('email', usedemail);
+                    window.localStorage.setItem('password', usedpassword);
+                    return;
+                }
+
+                /*login errato*/
+                alert('Login non riuscito, inserire le credenziali');
+                loginForm();
+
             }
-        }
-    </script>
+
+            function printForm(jsondata) {
+                //console.log(jsondata);
+                $('#form').find('.ui-content').html(jsondata.form);
+                location.href = '#form';
+            }
 
 
-</head>
+            function notify(jsonmsg) {
+                alert(jsonmsg.msg);
+            }
+            function prenotazioneOk(jsonmsg){
+                var msg=jsonmsg.msg;
+               // var dv=$('<div></div>');
+                 $('#form').find('.ui-content').html(msg);
+                
+            }
+            function prenota(server) {
+                if (!confirm('prenotare?')){
+                    return;
+                }
+                var urltoprenota = server + 'Webservice?action=prenota';
+                var x = $('#form').find('.ui-content').find('form').serializeArray();
+                $.each(x, function (i, field) {
+                    //console.log(field.name + ":" + field.value + " ");
+                    urltoprenota+='&'+field.name+'='+encodeURIComponent(field.value);
+                });
+                $.getScript(urltoprenota);
+            }
 
-<body>
-    <div id="home" data-role="page">
-        <div data-role="header" style="text-align: center">
-            <b>Prenotazione Taxi Cei</b>
-            <div style="position: absolute:top:1px:right:1px;text-align: right"><button class="ui-btn" onclick="closeApp()">x</button></div>
-            <div style="position: absolute:top:1px:right:1px;text-align: right"><button class="ui-btn ui-btn-left" onclick=" genericAjax(serverUrl+'?action=getForm')">+</button></div>
-           
-            
+
+            /*fine area funzioni richiamate dal server via jsonp*/
+
+            function loadCategoryData() {
+                genericAjax(categoryUrl);
+            }
+
+
+            function loginForm() {
+                var frm = $('<form></form>');
+                frm.append('<b>Inserire le credenziali</b><br>');
+                frm.append('<input type="text" id="email" placeholder="email">');
+                frm.append('<br><input type="password" id="password" placeholder="password">');
+                frm.append('<br><input type="button" id="btnlogin" value="Login" onclick="submitLogin($(\'#email\').val(),$(\'#password\').val())">');
+                $('#home').find('.ui-content').html(frm);
+            }
+
+            function loadData(jsonpdata) {
+                categoryData = jsonpdata;
+                populate();
+            }
+
+
+            function submitLogin(em, pwd) {
+                var url4login = loginUrl + '&email=' + em + '&password=' + pwd;
+                usedemail = em;
+                usedpassword = pwd;
+                genericAjax(url4login); //chiama , da server, getLoginResponse, per via del meccanismo jsonp
+            }
+
+            function populate() {
+
+                if (categoryData == '') {
+                    alert('Errore di connessione al server');
+                    return;
+                }
+                var toaddGG = $('<ul></ul>');
+                var prenotazioni = new Array();
+                try {
+                    prenotazioni = categoryData.prenotazioni;
+                    for (var t = 0; t < prenotazioni.length; t++) {
+                        toaddGG.append('<li class="ui-btn">' + prenotazioni[t] + '</li>');
+                    }
+                } catch (Excption) {
+                    prenotazioni.push("errore nel reperire le corse");
+                }
+                $('#home').find('.ui-content').html('<h1>Ultime 10 prenotazioni</h1>' + toaddGG.html());
+                $("#home").find("div[data-role='footer']").html('<i style="font-size:xx-small">' + baseUrl + '</i>');
+            }
+
+
+            function closeApp() {
+                if (navigator.app) {
+                    navigator.app.exitApp();
+                } else if (navigator.device) {
+                    navigator.device.exitApp();
+                } else {
+                    window.close();
+                }
+            }
+        </script>
+
+
+    </head>
+
+    <body>
+        <div id="home" data-role="page">
+            <div data-role="header" style="text-align: center">
+                <b>Prenotazione Taxi Cei</b>
+                <div style="position: absolute;top:1px;right:1px;text-align: right"><button class="ui-btn" onclick="closeApp()">x</button></div>
+                <div style="position: absolute;top:1px;left:1px;text-align: right"><button class="ui-btn ui-btn-left" onclick=" genericAjax(serverUrl + '?action=getForm&serveraddress=' + baseUrl)">+</button></div>
+
+
+            </div>
+            <div class="ui-content"></div>
+            <div data-role="footer"></div>
         </div>
-        <div class="ui-content"></div>
-        <div data-role="footer"></div>
-    </div>
-    
-    
-    <div id="form" data-role="page">
-        <div data-role="header" style="text-align: center">
-            <b>Prenotazione Taxi Cei</b>
-            <div style="position: absolute:top:1px:right:1px;text-align: right"><button class="ui-btn" onclick="closeApp()">x</button></div>          
-            
+
+
+        <div id="form" data-role="page">
+            <div data-role="header" style="text-align: center">
+                <b>Prenotazione Taxi Cei</b>
+                <div style="position: absolute:top:1px:right:1px;text-align: right"><button class="ui-btn" onclick="closeApp()">x</button></div>          
+
+            </div>
+            <div class="ui-content"></div>
+            <div data-role="footer"></div>
         </div>
-        <div class="ui-content"></div>
-        <div data-role="footer"></div>
-    </div>
-    
-    <script type="text/javascript" src="cordova.js"></script>
-</body>
+
+        <script type="text/javascript" src="cordova.js"></script>
+    </body>
 
 </html>
