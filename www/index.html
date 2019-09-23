@@ -43,7 +43,7 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
 
         <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="css/pasti.min.css" />
+        <link rel="stylesheet" href="css/taxi.min.css" />
         <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
         <title>Prenotazione taxi Cei</title>
         <script>
@@ -55,7 +55,7 @@
             var loginUrl = serverUrl + '?action=login';
             var categoryUrl = serverUrl + '?action=categoryData';
             var categoryData = '';
-
+            var htmlBtnPrenota="<div style=\"position: absolute;top:1px;left:1px;text-align: right\"><button id=\"btnprenota\" class=\"ui-btn ui-btn-left\" onclick=\" genericAjax(serverUrl + '?action=getForm&serveraddress=' + baseUrl)\">+</button></div> \n";
             $(document).on('pageinit', function () {
                 checkLogin();
 
@@ -123,6 +123,13 @@
                     // console.log(usedemail);
                     window.localStorage.setItem('email', usedemail);
                     window.localStorage.setItem('password', usedpassword);
+                    
+                    if($('#btnprenota').length){
+                        //sopra fa il check se esiste ilbottone per prenotare
+                    } else {
+                        $('#home').find('div[data-role="header"]').append(htmlBtnPrenota);
+                    }
+                    
                     return;
                 }
 
@@ -208,7 +215,7 @@
                     prenotazioni.push("errore nel reperire le corse");
                 }
                 $('#home').find('.ui-content').html('<h1>Ultime 10 prenotazioni</h1>' + toaddGG.html());
-                $("#home").find("div[data-role='footer']").html('<i style="font-size:xx-small">' + baseUrl + '</i>');
+                $("#home").find("div[data-role='footer']").html('<i style="font-size:xx-small">' + baseUrl + '</i>');                
             }
 
 
@@ -231,7 +238,7 @@
             <div data-role="header" style="text-align: center">
                 <b>Prenotazione Taxi Cei</b>
                 <div style="position: absolute;top:1px;right:1px;text-align: right"><button class="ui-btn" onclick="closeApp()">x</button></div>
-                <div style="position: absolute;top:1px;left:1px;text-align: right"><button class="ui-btn ui-btn-left" onclick=" genericAjax(serverUrl + '?action=getForm&serveraddress=' + baseUrl)">+</button></div>
+                
 
 
             </div>
