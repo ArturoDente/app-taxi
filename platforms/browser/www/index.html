@@ -47,8 +47,8 @@
         <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
         <title>Prenotazione taxi Cei</title>
         <script>
-            var baseUrl = 'http://192.168.1.195:8080/prenotazionetaxi/';
-            //var baseUrl = 'http://webapps.chiesacattolica.it/prenotazionetaxi/';
+            //var baseUrl = 'http://192.168.1.195:8080/prenotazionetaxi/';
+            var baseUrl = 'http://webapps.chiesacattolica.it/prenotazionetaxi/';
             var usedemail = ((localStorage.getItem('email')) ? localStorage.getItem('email') : '');
             var usedpassword = ((localStorage.getItem('password')) ? localStorage.getItem('password') : '');
             var serverUrl = baseUrl + 'Webservice';
@@ -214,7 +214,10 @@
                 } catch (Excption) {
                     prenotazioni.push("errore nel reperire le corse");
                 }
-                $('#home').find('.ui-content').html('<h1>Ultime 10 prenotazioni</h1>' + toaddGG.html());
+                var nopren='';
+                if (prenotazioni.length===0)
+                    nopren='<br><i>Ancora niente</i>';
+                $('#home').find('.ui-content').html('<h1>Ultime 10 prenotazioni</h1>' + toaddGG.html()+nopren);
                 $("#home").find("div[data-role='footer']").html('<i style="font-size:xx-small">' + baseUrl + '</i>');                
             }
 
